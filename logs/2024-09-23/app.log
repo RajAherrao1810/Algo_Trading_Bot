@@ -1,0 +1,4 @@
+[E 240923 11:59:46 webSocket:15] Invalid Token: The provided token is not valid.
+[E 240923 21:33:54 webSocket:15] Invalid Token: The provided token is not valid.
+[E 240923 21:35:33 webSocket:15] Invalid Token: The provided token is not valid.
+[E 240923 21:59:56 smartConnect:243] Error occurred while making a POST request to https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/getLtpData. Error: Failed to get symbol details. URL: https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/getLtpData, Headers: {'Content-type': 'application/json', 'X-ClientLocalIP': '127.0.0.1', 'X-ClientPublicIP': '106.193.147.98', 'X-MACAddress': '28:3a:4d:13:11:52', 'Accept': 'application/json', 'X-PrivateKey': '4aontghs', 'X-UserType': 'USER', 'X-SourceID': 'WEB'}, Request: {'exchange': 'NFO', 'tradingsymbol': 'BANKNIFTY', 'symboltoken': '26009'}, Response: {'message': 'Failed to get symbol details', 'errorcode': 'AB1018', 'status': False, 'data': None}
