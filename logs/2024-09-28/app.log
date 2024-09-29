@@ -1,0 +1,6 @@
+[E 240928 12:03:25 smartWebSocketV2:212] Error occurred during subscribe: socket is already closed.
+[I 240928 12:03:26 webSocket:43] WebSocket Opened
+[E 240928 12:08:01 smartWebSocketV2:212] Error occurred during subscribe: 'NoneType' object has no attribute 'send'
+[I 240928 19:20:11 webSocket:43] WebSocket Opened
+[I 240928 19:21:18 webSocket:43] WebSocket Opened
+[I 240928 19:25:42 webSocket:43] WebSocket Opened
