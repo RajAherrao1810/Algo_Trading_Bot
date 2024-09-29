@@ -1,46 +1,58 @@
 from SmartApi import SmartConnect
 from SmartApi.smartWebSocketV2 import SmartWebSocketV2
 import pyotp
+import time
 from logzero import logger
 
-api_key = '4aontghs'
-username = 'R544080'
-pwd = '1810'
-smartApi = SmartConnect(api_key)
+def sessionGeneration():
+    api_key = '4aontghs'
+    username = 'R544080'
+    pwd = '1810'
+    smartApi = SmartConnect(api_key)
 
-try:
-    token = "LLO4V5LZPZZDW2MITWEAEBPMII"
-    totp = pyotp.TOTP(token).now()
-except Exception as e:
-    logger.error("Invalid Token: The provided token is not valid.")
-    raise e
+    try:
+        token = "LLO4V5LZPZZDW2MITWEAEBPMII"
+        totp = pyotp.TOTP(token).now()
+    except Exception as e:
+        logger.error("Invalid Token: The provided token is not valid.")
+        raise e
 
-data = smartApi.generateSession(username, pwd, totp)
+    data = smartApi.generateSession(username, pwd, totp)
 
-if data['status'] == False:
-    logger.error(data)
-else:
-    authToken = data['data']['jwtToken']
-    refreshToken = data['data']['refreshToken']
-    feedToken = smartApi.getfeedToken()
-    smartApi.getProfile(refreshToken)
-    smartApi.generateToken(refreshToken)
+    if data['status'] == False:
+        logger.error(data)
+    else:
+        authToken = data['data']['jwtToken']
+        refreshToken = data['data']['refreshToken']
+        feedToken = smartApi.getfeedToken()
+        smartApi.getProfile(refreshToken)
+        smartApi.generateToken(refreshToken)
+
+    return {
+        'api_key':api_key,
+        'client_code':username,
+        'smarApi':data,
+        'authToken':authToken,
+        'feedToken':feedToken
+    }
 
 
 # ---------- WebSocket Implementation ---------------
 
 def webSocketImplementation():
-    AUTH_TOKEN = authToken
-    API_KEY = api_key
-    CLIENT_CODE = username
-    FEED_TOKEN = feedToken
+    defs=sessionGeneration()
+    AUTH_TOKEN = defs['authToken']
+    API_KEY = defs['api_key']
+    CLIENT_CODE = defs['client_code']
+    FEED_TOKEN = defs['feedToken']
 
 
     def on_data(wsapp, message):
         logger.info("Ticks: {}".format(message))
 
     def on_open(wsapp):
-        logger.info("WebSocket Opened")
+        time.sleep(60)  # Keep the connection open for 1 minute
+        logger.info("1 minute has passed, continuing...")
 
     def on_error(wsapp, error):
         logger.error(error)
@@ -58,5 +70,5 @@ def webSocketImplementation():
     return sws
 
 if __name__=="__main__":
-    pass
+    webSocketImplementation()
 

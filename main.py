@@ -1,26 +1,8 @@
 import time
-from websocket_handler import WebSocketHandler  # Custom WebSocket handler class
-from instrument import Instrument  # Class containing methods to get token info, LTP, etc.
-import orderPlacement  # Assuming this module handles the order placement logic
-from strategies import short_Straddle, long_Straddle  # Import strategy files
+import webSocket
+from SmartApi import SmartConnect
+import orderPlacement  
 
-# Initialize SmartAPI connection
-def initialize_connection():
-    api_key = "your_api_key"
-    client_id = "your_client_id"
-    password = "your_password"
-    
-    # Create SmartAPI object and login
-    smart_api = SmartConnect(api_key=api_key)
-    session = smart_api.generateSession(client_id, password)
-    return smart_api
-
-# Start WebSocket connection at 9:00 AM
-def start_websocket_connection(smart_api):
-    print("Starting WebSocket connection at 9:00 AM...")
-    websocket = WebSocketHandler(smart_api)
-    websocket.connect()
-    return websocket
 
 # Subscribe to the tokens based on the selected strategy
 def subscribe_to_tokens(websocket, tokens):
@@ -39,20 +21,19 @@ def execute_strategy(strategy_module, instrument, tokens):
 
 # Main function to integrate everything
 def main():
-    # Step 1: Initialize SmartAPI connection
-    smart_api = initialize_connection()
 
     # Step 2: Start WebSocket connection at 9:00 AM
-    websocket = start_websocket_connection(smart_api)
-    
+    #websocket = webSocket.webSocketImplementation()
+    defs=webSocket.sessionGeneration()
+    SmartConnect.ltpData("NSE", "SBIN-EQ", "3045")
     # Step 3: Initialize Instrument class to fetch token details
-    instrument = Instrument(smart_api)
+    #instrument = Instrument(smart_api)
     
     # Step 4: User selects the strategy and index
     print("Select a trading strategy: 1) Short Straddle 2) Long Straddle")
     strategy_choice = input("Enter your choice (1 or 2): ")
 
-    strategy_module = None
+    """strategy_module = None
     if strategy_choice == '1':
         strategy_module = short_Straddle
     elif strategy_choice == '2':
@@ -76,7 +57,8 @@ def main():
 
     except KeyboardInterrupt:
         print("Shutting down WebSocket and exiting the bot...")
-        websocket.disconnect()
+        websocket.disconnect()"""
 
 if __name__ == "__main__":
     main()
+ 
