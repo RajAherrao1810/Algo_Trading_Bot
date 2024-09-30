@@ -31,7 +31,6 @@ def sessionGeneration():
     return {
         'api_key':api_key,
         'client_code':username,
-        'smarApi':data,
         'authToken':authToken,
         'feedToken':feedToken
     }
@@ -39,20 +38,28 @@ def sessionGeneration():
 
 # ---------- WebSocket Implementation ---------------
 
-def webSocketImplementation():
-    defs=sessionGeneration()
+def webSocketImplementation(defs):
     AUTH_TOKEN = defs['authToken']
     API_KEY = defs['api_key']
     CLIENT_CODE = defs['client_code']
     FEED_TOKEN = defs['feedToken']
+    correlation_id = "abc123"
+    action = 1
+    mode = 1
 
+    token_list = [
+        {
+            "exchangeType": 1,
+            "tokens": ["26009","26000",'500209','500253','999260','26164']
+        }
+    ]
 
     def on_data(wsapp, message):
         logger.info("Ticks: {}".format(message))
 
     def on_open(wsapp):
-        time.sleep(60)  # Keep the connection open for 1 minute
-        logger.info("1 minute has passed, continuing...")
+        logger.info("on open")
+        sws.subscribe(correlation_id, mode, token_list)
 
     def on_error(wsapp, error):
         logger.error(error)
@@ -67,7 +74,10 @@ def webSocketImplementation():
     sws.on_data = on_data
     sws.on_error = on_error
     sws.on_close = on_close
-    return sws
+
+    sws.connect()
+    time.sleep(10)
+    sws.close_connection()
 
 if __name__=="__main__":
     webSocketImplementation()

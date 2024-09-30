@@ -1,6 +1,7 @@
 import time
 import webSocket
 from SmartApi import SmartConnect
+import threading
 import orderPlacement  
 
 
@@ -21,19 +22,21 @@ def execute_strategy(strategy_module, instrument, tokens):
 
 # Main function to integrate everything
 def main():
-
-    # Step 2: Start WebSocket connection at 9:00 AM
-    #websocket = webSocket.webSocketImplementation()
     defs=webSocket.sessionGeneration()
-    SmartConnect.ltpData("NSE", "SBIN-EQ", "3045")
-    # Step 3: Initialize Instrument class to fetch token details
-    #instrument = Instrument(smart_api)
+
+    #connection with websocket to generate ltp of indices
+    """websocket_thread = threading.Thread(target=webSocket.webSocketImplementation(defs))
+    websocket_thread.daemon = True  # Set the thread as a daemon
+    websocket_thread.start()"""
     
-    # Step 4: User selects the strategy and index
+    smartApi = SmartConnect(defs['api_key'])
+
+
+    """
     print("Select a trading strategy: 1) Short Straddle 2) Long Straddle")
     strategy_choice = input("Enter your choice (1 or 2): ")
 
-    """strategy_module = None
+    strategy_module = None
     if strategy_choice == '1':
         strategy_module = short_Straddle
     elif strategy_choice == '2':
