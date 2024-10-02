@@ -4,39 +4,16 @@ from SmartApi import SmartConnect
 import threading
 import orderPlacement  
 
-
-# Subscribe to the tokens based on the selected strategy
-def subscribe_to_tokens(websocket, tokens):
-    for token in tokens:
-        websocket.subscribe(token)
-    print(f"Subscribed to tokens: {tokens}")
-
-# Fetch the latest LTP and place orders using the selected strategy
-def execute_strategy(strategy_module, instrument, tokens):
-    for token in tokens:
-        ltp = instrument.get_ltp(token)
-        print(f"Fetched LTP for token {token}: {ltp}")
-        
-        # Execute the strategy logic and place orders accordingly
-        strategy_module.run_strategy(token, ltp)
-
 # Main function to integrate everything
 def main():
-    defs=webSocket.sessionGeneration()
-
-    #connection with websocket to generate ltp of indices
-    """websocket_thread = threading.Thread(target=webSocket.webSocketImplementation(defs))
-    websocket_thread.daemon = True  # Set the thread as a daemon
-    websocket_thread.start()"""
     
-    smartApi = SmartConnect(defs['api_key'])
+    
+    smartApi = SmartConnect(defs['api_key']) #connection with smartApi for placing order 
 
-
-    """
     print("Select a trading strategy: 1) Short Straddle 2) Long Straddle")
     strategy_choice = input("Enter your choice (1 or 2): ")
 
-    strategy_module = None
+    """strategy_module = None
     if strategy_choice == '1':
         strategy_module = short_Straddle
     elif strategy_choice == '2':
@@ -63,5 +40,15 @@ def main():
         websocket.disconnect()"""
 
 if __name__ == "__main__":
-    main()
+    defs=webSocket.sessionGeneration()
+    sws=webSocket.webSocketImplementation(defs)
+    token_list = [
+        {
+            "exchangeType": 5,
+            "tokens": ["244999"]
+        }
+    ]
+    webSocket.feed(token_list,sws)
+    
+    
  

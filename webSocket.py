@@ -1,7 +1,7 @@
 from SmartApi import SmartConnect
 from SmartApi.smartWebSocketV2 import SmartWebSocketV2
 import pyotp
-import time
+import threading
 from logzero import logger
 
 def sessionGeneration():
@@ -43,22 +43,23 @@ def webSocketImplementation(defs):
     API_KEY = defs['api_key']
     CLIENT_CODE = defs['client_code']
     FEED_TOKEN = defs['feedToken']
+    
+
+    sws = SmartWebSocketV2(AUTH_TOKEN, API_KEY, CLIENT_CODE, FEED_TOKEN)
+    return sws
+
+def feed(token_list,sws):
     correlation_id = "abc123"
     action = 1
     mode = 1
-
-    token_list = [
-        {
-            "exchangeType": 1,
-            "tokens": ["26009","26000",'500209','500253','999260','26164']
-        }
-    ]
-
     def on_data(wsapp, message):
         logger.info("Ticks: {}".format(message))
 
+    def on_control_message(wsapp, message):
+        logger.info(f"Control Message: {message}")
+
     def on_open(wsapp):
-        logger.info("on open")
+        logger.info("WebSocket connection opened")
         sws.subscribe(correlation_id, mode, token_list)
 
     def on_error(wsapp, error):
@@ -68,17 +69,25 @@ def webSocketImplementation(defs):
         logger.info("WebSocket Closed")
 
 
-    sws = SmartWebSocketV2(AUTH_TOKEN, API_KEY, CLIENT_CODE, FEED_TOKEN)
+    
     # Assign the callbacks.
     sws.on_open = on_open
     sws.on_data = on_data
     sws.on_error = on_error
     sws.on_close = on_close
-
+    sws.on_control_message = on_control_message
     sws.connect()
-    time.sleep(10)
-    sws.close_connection()
+    
+    
 
 if __name__=="__main__":
-    webSocketImplementation()
-
+    defs=sessionGeneration()
+    sws=webSocketImplementation(defs)
+    token_list = [
+        {
+            "exchangeType": 5,
+            "tokens": ["244999"]
+        }
+    ]
+    feed(token_list,sws)
+    

@@ -1,0 +1,20 @@
+[I 241002 10:56:56 webSocket:60] WebSocket connection opened
+[I 241002 10:56:56 webSocket:57] Ticks: {'subscription_mode': 1, 'exchange_type': 5, 'token': '244999', 'sequence_number': 12759, 'exchange_timestamp': 1674178057641, 'last_traded_price': 655300, 'subscription_mode_val': 'LTP'}
+[W 241002 10:57:56 smartWebSocketV2:319] Attempting to resubscribe/reconnect (Attempt 1)...
+[E 241002 10:57:58 webSocket:64] Connection closed
+[W 241002 10:57:58 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[I 241002 10:58:48 webSocket:60] WebSocket connection opened
+[I 241002 10:58:48 webSocket:57] Ticks: {'subscription_mode': 1, 'exchange_type': 5, 'token': '244999', 'sequence_number': 12759, 'exchange_timestamp': 1674178057641, 'last_traded_price': 655300, 'subscription_mode_val': 'LTP'}
+[I 241002 10:59:21 webSocket:60] WebSocket connection opened
+[I 241002 10:59:21 webSocket:57] Ticks: {'subscription_mode': 1, 'exchange_type': 5, 'token': '244999', 'sequence_number': 12759, 'exchange_timestamp': 1674178057641, 'last_traded_price': 655300, 'subscription_mode_val': 'LTP'}
+[I 241002 11:03:52 webSocket:60] WebSocket connection opened
+[I 241002 11:03:52 webSocket:57] Ticks: {'subscription_mode': 1, 'exchange_type': 5, 'token': '244999', 'sequence_number': 12759, 'exchange_timestamp': 1674178057641, 'last_traded_price': 655300, 'subscription_mode_val': 'LTP'}
+[I 241002 11:04:23 webSocket:60] WebSocket connection opened
+[I 241002 11:04:23 webSocket:57] Ticks: {'subscription_mode': 1, 'exchange_type': 5, 'token': '244999', 'sequence_number': 12759, 'exchange_timestamp': 1674178057641, 'last_traded_price': 655300, 'subscription_mode_val': 'LTP'}
+[I 241002 11:06:44 webSocket:63] WebSocket connection opened
+[I 241002 11:06:44 webSocket:57] Ticks: {'subscription_mode': 1, 'exchange_type': 5, 'token': '244999', 'sequence_number': 12759, 'exchange_timestamp': 1674178057641, 'last_traded_price': 655300, 'subscription_mode_val': 'LTP'}
+[I 241002 17:26:06 webSocket:62] WebSocket connection opened
+[I 241002 17:26:06 webSocket:56] Ticks: {'subscription_mode': 1, 'exchange_type': 5, 'token': '244999', 'sequence_number': 12759, 'exchange_timestamp': 1674178057641, 'last_traded_price': 655300, 'subscription_mode_val': 'LTP'}
+[W 241002 17:26:26 smartWebSocketV2:319] Attempting to resubscribe/reconnect (Attempt 1)...
+[E 241002 17:26:31 webSocket:66] Connection closed
+[W 241002 17:26:31 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
