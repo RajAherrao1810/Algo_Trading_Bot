@@ -1,6 +1,5 @@
 import requests
 import pandas as pd
-from webSocket import sws, smartApi
 from logzero import logger
 
 class Instrument():
@@ -40,20 +39,7 @@ class Instrument():
     
     @classmethod
     def get_indice_ltp(cls,index):
-        if sws is None:
-            logger.error("WebSocket is not connected")
-            return None
-        
-        # Call LTP data for the given index
-        token = cls.indiceInfo()[index]['token']
-        sws.subscribe([token])  # Subscribe to the index's token
-        ltp_data = smartApi.ltpData('NSE', index, token)
-        
-        if ltp_data['status']:
-            return ltp_data['data']['ltp']
-        else:
-            logger.error(f"Error fetching LTP for {index}: {ltp_data['message']}")
-            return None
+        pass
 
 if __name__ == "__main__":
     #token=Instrument.getTokenFromSymbol('BANKNIFTY25SEP2454000CE')

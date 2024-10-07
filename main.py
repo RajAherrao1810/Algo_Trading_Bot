@@ -44,11 +44,21 @@ if __name__ == "__main__":
     sws=webSocket.webSocketImplementation(defs)
     token_list = [
         {
-            "exchangeType": 5,
-            "tokens": ["244999"]
+            "exchangeType": 1,
+            "tokens": ["26000"]
         }
     ]
-    webSocket.feed(token_list,sws)
+    thread = threading.Thread(target=webSocket.feed, args=(token_list, sws))
+    thread.start()
+    time.sleep(1)  
+    print('control')
+    token_list1 = [
+        {
+            "exchangeType": 1,
+            "tokens": ["26009"]
+        }
+    ]
+    thread = threading.Thread(target=webSocket.feed, args=(token_list1, sws))
+    thread.start()
+    time.sleep(10)
     
-    
- 

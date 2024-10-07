@@ -1,8 +1,9 @@
 from SmartApi import SmartConnect
 from SmartApi.smartWebSocketV2 import SmartWebSocketV2
 import pyotp
-import threading
+from instrument import Instrument
 from logzero import logger
+from pymongo import MongoClient
 
 def sessionGeneration():
     api_key = '4aontghs'
@@ -30,6 +31,7 @@ def sessionGeneration():
 
     return {
         'api_key':api_key,
+        'smartAPi': smartApi,
         'client_code':username,
         'authToken':authToken,
         'feedToken':feedToken
@@ -48,13 +50,59 @@ def webSocketImplementation(defs):
     sws = SmartWebSocketV2(AUTH_TOKEN, API_KEY, CLIENT_CODE, FEED_TOKEN)
     return sws
 
-def feed(token_list,sws):
+
+
+def feed(token_list, sws):
     correlation_id = "abc123"
     action = 1
-    mode = 1
+    mode = 2
+
+    # MongoDB connection
+    client = MongoClient('mongodb://localhost:27017/')  # Replace with your actual connection string
+    db = client['Live_Data_Feed']  # Database name
+    collection = db['Live_feed']  # Collection name
+
     def on_data(wsapp, message):
         logger.info("Ticks: {}".format(message))
+        token = message['token']
+        ltp = message['last_traded_price'] / 100  # Dividing by 100 to handle prices in proper decimal format
+        open_price = message['open_price_of_the_day'] / 100 
+        high = message['high_price_of_the_day'] / 100 
+        low = message['low_price_of_the_day'] / 100 
+        close_price = message['closed_price'] / 100 
 
+        # Check if the token already exists in the collection
+        existing_entry = collection.find_one({"Token": token})
+
+        if existing_entry:
+            # Update the document with the new data
+            collection.update_one(
+                {"Token": token},
+                {
+                    "$set": {
+                        "LTP": ltp,
+                        "Open": open_price,
+                        "High": high,
+                        "Low": low,
+                        "Cls": close_price
+                    }
+                }
+            )
+        else:
+            # Insert a new document if token is not found
+            new_entry = { 
+                "Token": token,
+                "LTP": ltp,
+                "Open": open_price,
+                "High": high,
+                "Low": low,
+                "Cls": close_price
+            }
+            collection.insert_one(new_entry)
+
+    # Continue with the WebSocket implementation
+
+    
     def on_control_message(wsapp, message):
         logger.info(f"Control Message: {message}")
 

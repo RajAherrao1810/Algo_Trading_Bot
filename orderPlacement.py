@@ -1,9 +1,7 @@
-import webSocket
-
 class PlaceOrder:
 
     @classmethod
-    def normalMarketOrder(cls,symbol,token,transaction_type,exchange,product_type,quantity):
+    def normalMarketOrder(cls,symbol,token,transaction_type,exchange,product_type,quantity,obj):
         order_params = {
             "variety": "NORMAL",
             "tradingsymbol": symbol,  # Token symbol (e.g., RELIANCE)
@@ -17,13 +15,13 @@ class PlaceOrder:
         }
         
         try:
-            order_id = webSocket.smartApi.placeOrder(order_params)
+            order_id = obj.placeOrder(order_params)
             print(f"Order placed successfully. Order ID: {order_id}")
         except Exception as e:
             print(f"Order placement failed: {str(e)}")
 
     @classmethod
-    def normalLimitOrder(cls,symbol,token,transaction_type,exchange,product_type,limit_price,quantity):
+    def normalLimitOrder(cls,symbol,token,transaction_type,exchange,product_type,limit_price,quantity,obj):
         order_params = {
             "variety": "NORMAL",
             "tradingsymbol": symbol,  # Token symbol (e.g., RELIANCE)
@@ -38,14 +36,14 @@ class PlaceOrder:
         }
         
         try:
-            order_id = webSocket.smartApi.placeOrder(order_params)
+            order_id = obj.placeOrder(order_params)
             print(f"Order placed successfully. Order ID: {order_id}")
         except Exception as e:
             print(f"Order placement failed: {str(e)}")
 
 
     @classmethod
-    def stopLossLimitOrder(cls, symbol, token, transaction_type, exchange, product_type, limit_price, trigger_price, quantity):
+    def stopLossLimitOrder(cls, symbol, token, transaction_type, exchange, product_type, limit_price, trigger_price, quantity,obj):
         order_params = {
             "variety": "NORMAL",  # Type of order
             "tradingsymbol": symbol,  # Symbol (e.g., RELIANCE)
@@ -61,7 +59,7 @@ class PlaceOrder:
         }
         
         try:
-            order_id = webSocket.smartApi.placeOrder(order_params)
+            order_id = obj.placeOrder(order_params)
             print(f"Stop Loss Limit Order placed successfully. Order ID: {order_id}")
         except Exception as e:
             print(f"Stop Loss Limit Order placement failed: {str(e)}")
