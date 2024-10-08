@@ -38,12 +38,12 @@ class Instrument():
     @classmethod
     def indiceInfo(cls):
         index_info={
-    'SENSEX': {'strike_diff': 100, 'token': '500209', 'lot_size': 10},
-    'BANKNIFTY': {'strike_diff': 100, 'token': '26009', 'lot_size': 15},
-    'BANKEX': {'strike_diff': 100, 'token': '500253', 'lot_size': 15},
-    'NIFTY': {'strike_diff': 50, 'token': '26000', 'lot_size': 25},
-    'FINNIFTY': {'strike_diff': 50, 'token': '999260', 'lot_size': 25},
-    'MIDCPNIFTY': {'strike_diff': 25, 'token': '26164', 'lot_size': 50}
+        'SENSEX': {'strike_diff': 100, 'token': '500209', 'lot_size': 10},
+        'BANKNIFTY': {'strike_diff': 100, 'token': '26009', 'lot_size': 15},
+        'BANKEX': {'strike_diff': 100, 'token': '500253', 'lot_size': 15},
+        'NIFTY': {'strike_diff': 50, 'token': '26000', 'lot_size': 25},
+        'FINNIFTY': {'strike_diff': 50, 'token': '999260', 'lot_size': 25},
+        'MIDCPNIFTY': {'strike_diff': 25, 'token': '26164', 'lot_size': 50}
     }
         return index_info
     

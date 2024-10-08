@@ -70,7 +70,6 @@ def on_data(wsapp, msg):
                 "Cls": close,
             }
             collection.insert_one(new_data)
-            print(f"Inserted new token {token} in MongoDB")
 
     except Exception as e:
         print(f"Error in on_data: {e}")

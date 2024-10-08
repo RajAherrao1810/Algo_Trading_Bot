@@ -20,3 +20,33 @@
 [I 241008 12:27:34 webSocket:95] on open
 [E 241008 12:27:47 webSocket:80] ---------Connection Error Connection closed-----------
 [W 241008 12:27:47 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[I 241008 18:58:57 webSocket:115] on open
+[E 241008 18:59:03 webSocket:80] ---------Connection Error Connection closed-----------
+[W 241008 18:59:03 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[I 241008 18:59:43 webSocket:115] on open
+[E 241008 18:59:49 webSocket:80] ---------Connection Error Connection closed-----------
+[W 241008 18:59:49 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[I 241008 19:17:59 webSocket:115] on open
+[I 241008 19:34:32 webSocket:114] on open
+[I 241008 19:37:38 webSocket:114] on open
+[I 241008 19:42:17 webSocket:114] on open
+[I 241008 19:46:10 webSocket:114] on open
+[I 241008 20:06:03 webSocket:114] on open
+[E 241008 20:06:12 webSocket:79] ---------Connection Error Connection closed-----------
+[W 241008 20:06:12 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[I 241008 22:06:44 webSocket:114] on open
+[E 241008 22:06:53 webSocket:79] ---------Connection Error Connection closed-----------
+[W 241008 22:06:53 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[I 241008 22:17:04 webSocket:114] on open
+[E 241008 22:17:08 smartConnect:246] Error occurred while making a POST request to https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/placeOrder. Error: Invalid quantity length. URL: https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/placeOrder, Headers: {'Content-type': 'application/json', 'X-ClientLocalIP': '127.0.0.1', 'X-ClientPublicIP': '106.193.147.98', 'X-MACAddress': '28:3a:4d:13:11:52', 'Accept': 'application/json', 'X-PrivateKey': '4aontghs', 'X-UserType': 'USER', 'X-SourceID': 'WEB'}, Request: {'variety': 'NORMAL', 'tradingsymbol': 'BANKNIFTY09OCT2451100CE', 'symboltoken': '44119', 'transactiontype': 'SELL', 'exchange': 'NFO', 'ordertype': 'MARKET', 'producttype': 'INTRADAY', 'duration': 'DAY', 'quantity': '111111111111111'}, Response: {'message': 'Invalid quantity length', 'errorcode': 'AB4002', 'status': False, 'data': None}
+[E 241008 22:17:08 smartConnect:339] API request failed: {'message': 'Invalid quantity length', 'errorcode': 'AB4002', 'status': False, 'data': None}
+[E 241008 22:17:08 smartConnect:246] Error occurred while making a POST request to https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/placeOrder. Error: Invalid quantity length. URL: https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/placeOrder, Headers: {'Content-type': 'application/json', 'X-ClientLocalIP': '127.0.0.1', 'X-ClientPublicIP': '106.193.147.98', 'X-MACAddress': '28:3a:4d:13:11:52', 'Accept': 'application/json', 'X-PrivateKey': '4aontghs', 'X-UserType': 'USER', 'X-SourceID': 'WEB'}, Request: {'variety': 'NORMAL', 'tradingsymbol': 'BANKNIFTY09OCT2451100PE', 'symboltoken': '44120', 'transactiontype': 'SELL', 'exchange': 'NFO', 'ordertype': 'MARKET', 'producttype': 'INTRADAY', 'duration': 'DAY', 'quantity': '111111111111111'}, Response: {'message': 'Invalid quantity length', 'errorcode': 'AB4002', 'status': False, 'data': None}
+[E 241008 22:17:08 smartConnect:339] API request failed: {'message': 'Invalid quantity length', 'errorcode': 'AB4002', 'status': False, 'data': None}
+[E 241008 22:17:13 webSocket:79] ---------Connection Error Connection closed-----------
+[W 241008 22:17:13 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[I 241008 22:21:25 webSocket:114] on open
+[E 241008 22:21:33 webSocket:79] ---------Connection Error Connection closed-----------
+[W 241008 22:21:33 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[I 241008 22:22:47 webSocket:114] on open
+[E 241008 22:22:56 webSocket:79] ---------Connection Error Connection closed-----------
+[W 241008 22:22:56 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
