@@ -1,14 +1,13 @@
 import time
 import webSocket
-from SmartApi import SmartConnect
-import threading
+import config
 import orderPlacement  
 
 # Main function to integrate everything
 def main():
     
     
-    smartApi = SmartConnect(defs['api_key']) #connection with smartApi for placing order 
+    #smartApi = SmartConnect(defs['api_key']) #connection with smartApi for placing order 
 
     print("Select a trading strategy: 1) Short Straddle 2) Long Straddle")
     strategy_choice = input("Enter your choice (1 or 2): ")
@@ -40,25 +39,23 @@ def main():
         websocket.disconnect()"""
 
 if __name__ == "__main__":
-    defs=webSocket.sessionGeneration()
-    sws=webSocket.webSocketImplementation(defs)
-    token_list = [
-        {
-            "exchangeType": 1,
-            "tokens": ["26000"]
-        }
-    ]
-    thread = threading.Thread(target=webSocket.feed, args=(token_list, sws))
-    thread.start()
-    time.sleep(1)  
-    print('control')
-    token_list1 = [
-        {
-            "exchangeType": 1,
-            "tokens": ["26009"]
-        }
-    ]
-    thread = threading.Thread(target=webSocket.feed, args=(token_list1, sws))
-    thread.start()
-    time.sleep(10)
+    config.SMART_API_OBJ , config.SMART_WEB =  webSocket.login()
+
+    webSocket.connectFeed(config.SMART_WEB)
+    time.sleep(5)
+    time.sleep(3)
+    subscribeList  = [{"exchangeType": 2, "tokens": ["44117" ,"44118"]}]
+
+
+
+    webSocket.subscribeSymbol(subscribeList,config.SMART_WEB)
+    time.sleep(5)
+
+    webSocket.unsubscribeSymbol(subscribeList, config.SMART_WEB)
+
+    time.sleep(5)
+
+    webSocket.close_connection(config.SMART_WEB)
+    time.sleep(5)
+
     

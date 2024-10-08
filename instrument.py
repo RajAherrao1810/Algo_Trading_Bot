@@ -1,6 +1,5 @@
 import requests
 import pandas as pd
-from logzero import logger
 
 class Instrument():
     
@@ -20,6 +19,17 @@ class Instrument():
             return token_row.iloc[0]['token']
         else:
             return None
+        
+    @classmethod
+    def getSymbolFromToken(cls, token):
+        master_df = pd.read_csv('MasterList.csv', low_memory=False)
+        token_row = master_df.loc[master_df['token'] == token]
+        
+        if not token_row.empty:
+            return token_row.iloc[0]['symbol']
+        else:
+            return None
+
         
     @classmethod
     def getTokenSymbol(cls,index,expiry,strike,european):
@@ -45,5 +55,5 @@ if __name__ == "__main__":
     #token=Instrument.getTokenFromSymbol('BANKNIFTY25SEP2454000CE')
     #print(token)
     #print(Instrument.getTokenSymbol('BANKNIFTY','25SEP24','54000','CE'))
-    print(Instrument.get_indice_ltp('BANKNIFTY'))
-    #Instrument.getMasterList()
+    #print(Instrument.get_indice_ltp('BANKNIFTY'))
+    Instrument.getMasterList()

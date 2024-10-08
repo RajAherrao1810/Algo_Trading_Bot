@@ -1,0 +1,22 @@
+[I 241008 08:35:46 webSocket:110] WebSocket connection opened
+[I 241008 08:35:46 webSocket:66] Ticks: {'subscription_mode': 2, 'exchange_type': 5, 'token': '244999', 'sequence_number': 12759, 'exchange_timestamp': 1674178057641, 'last_traded_price': 655300, 'subscription_mode_val': 'QUOTE', 'last_traded_quantity': 1, 'average_traded_price': 644558, 'volume_trade_for_the_day': 2274, 'total_buy_quantity': 33.0, 'total_sell_quantity': 49.0, 'open_price_of_the_day': 641000, 'high_price_of_the_day': 660800, 'low_price_of_the_day': 635200, 'closed_price': 651000}
+[I 241008 08:35:48 webSocket:66] Ticks: {'subscription_mode': 2, 'exchange_type': 5, 'token': '244999', 'sequence_number': 12759, 'exchange_timestamp': 1674178057641, 'last_traded_price': 655300, 'subscription_mode_val': 'QUOTE', 'last_traded_quantity': 1, 'average_traded_price': 644558, 'volume_trade_for_the_day': 2274, 'total_buy_quantity': 33.0, 'total_sell_quantity': 49.0, 'open_price_of_the_day': 641000, 'high_price_of_the_day': 660800, 'low_price_of_the_day': 635200, 'closed_price': 651000}
+[W 241008 09:38:04 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[W 241008 09:41:06 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[W 241008 09:46:08 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[W 241008 10:05:53 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[W 241008 10:52:28 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[W 241008 11:03:06 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[W 241008 11:04:52 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[W 241008 11:32:33 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[W 241008 11:36:00 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[W 241008 11:37:55 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[W 241008 11:53:52 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[W 241008 11:58:39 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[W 241008 12:15:24 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[I 241008 12:24:48 webSocket:101] on open
+[E 241008 12:25:01 webSocket:86] ---------Connection Error Connection closed-----------
+[W 241008 12:25:01 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[I 241008 12:27:34 webSocket:95] on open
+[E 241008 12:27:47 webSocket:80] ---------Connection Error Connection closed-----------
+[W 241008 12:27:47 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
