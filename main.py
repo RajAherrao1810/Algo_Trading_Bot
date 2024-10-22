@@ -1,7 +1,7 @@
 import time
-import webSocket
-import config
-from short_StraddlexStrangle import Short_StraddlexStrangle
+import FastApi.functions.webSocket as webSocket
+import FastApi.functions.config as config
+from FastApi.strategies.short_StraddlexStrangle import Short_StraddlexStrangle
 
     
 
@@ -12,7 +12,7 @@ if __name__ == "__main__":
     collection=webSocket.get_mongo_connection()
     print("Select a trading strategy: 1) Short Straddle 2) Long Straddle")
     index = 'BANKNIFTY'
-    expiry = '09OCT24'
+    expiry = '16OCT24'
     lots = 1
     ltp=collection.find_one({"Symbol": index})['LTP']
     

@@ -1,0 +1,6 @@
+[I 241009 11:08:47 webSocket:114] on open
+[E 241009 11:08:55 webSocket:79] ---------Connection Error Connection closed-----------
+[W 241009 11:08:55 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[I 241009 11:09:32 webSocket:114] on open
+[E 241009 11:09:40 webSocket:79] ---------Connection Error Connection closed-----------
+[W 241009 11:09:40 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
