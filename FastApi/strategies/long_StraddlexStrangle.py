@@ -5,7 +5,7 @@ import math
 class Long_StraddlexStrangle():
 
     @classmethod
-    def short_Strangle(cls,index,expiry,lots,ltp,obj):
+    def long_Strangle(cls,index,expiry,lots,ltp,obj):
         num=Instrument.indiceInfo()[index]['strike_diff']
         atm_Strike=str(math.ceil(ltp/num)*num)
         
@@ -21,7 +21,7 @@ class Long_StraddlexStrangle():
     
 
     @classmethod
-    def short_Straddle(cls,index,expiry,lots,ltp,obj):
+    def long_Straddle(cls,index,expiry,lots,ltp,obj):
         num=Instrument.indiceInfo()[index]['strike_diff']
         atm_Strike=math.ceil(ltp/num)*num
         

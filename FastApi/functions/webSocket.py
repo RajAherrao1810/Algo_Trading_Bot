@@ -2,8 +2,8 @@ from SmartApi import SmartConnect
 from SmartApi.smartWebSocketV2 import SmartWebSocketV2
 import threading
 import pyotp
-import FastApi.functions.config as config
-from instrument import Instrument
+import functions.config as config
+from functions.instrument import Instrument
 from pymongo import MongoClient
 from logzero import logger
 

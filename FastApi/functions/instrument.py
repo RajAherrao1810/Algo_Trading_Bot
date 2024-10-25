@@ -12,7 +12,7 @@ class Instrument():
 
     @classmethod
     def getTokenFromSymbol(cls, symbol):
-        master_df = pd.read_csv('MasterList.csv', low_memory=False)
+        master_df = pd.read_csv('functions/MasterList.csv', low_memory=False)
         token_row = master_df.loc[master_df['symbol'] == symbol]
         
         if not token_row.empty:
@@ -22,7 +22,7 @@ class Instrument():
         
     @classmethod
     def getSymbolFromToken(cls, token):
-        master_df = pd.read_csv('MasterList.csv', low_memory=False)
+        master_df = pd.read_csv('functions/MasterList.csv', low_memory=False)
         token_row = master_df.loc[master_df['token'] == token]
         
         if not token_row.empty:
