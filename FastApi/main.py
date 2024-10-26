@@ -3,6 +3,7 @@ from models.order_models import MarketOrderRequest, LimitOrderRequest, StopLossO
 from functions.orderPlacement import PlaceOrder
 import functions.webSocket as ws
 from passlib.context import CryptContext
+import bcrypt
 #from functions.instrument import Instrument
 import functions.config as config
 from fastapi.middleware.cors import CORSMiddleware
@@ -24,7 +25,8 @@ def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
@@ -64,15 +66,15 @@ async def register(user: UserRegister):
 
 
 
-@app.get("/login")
+@app.post("/login")
 async def login(user: LoginUser):
     # Query the MongoDB `Users` collection
     user_data =  collection.find_one({"email": user.email})
     
     # Check if user exists and password matches
-    if user_data['email']==user.email:
-        hashed_pass=hash_password(user.password)
-        if hashed_pass==user_data['password']:
+    if user_data:
+        # Check if password matches
+        if bcrypt.checkpw(user.password.encode('utf-8'), user_data['password'].encode('utf-8')):
             print('logging in')
             return {"message": "Login successful"}
         else:

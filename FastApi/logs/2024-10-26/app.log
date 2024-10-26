@@ -1,0 +1,29 @@
+[I 241026 08:57:53 webSocket:114] on open
+[I 241026 09:40:55 smartConnect:124] in pool
+[I 241026 09:40:56 smartConnect:124] in pool
+[I 241026 09:40:57 smartConnect:124] in pool
+[I 241026 09:40:58 smartConnect:124] in pool
+[I 241026 09:40:59 smartConnect:124] in pool
+[I 241026 09:41:00 smartConnect:124] in pool
+[I 241026 09:41:01 smartConnect:124] in pool
+[I 241026 09:41:02 smartConnect:124] in pool
+[I 241026 09:41:03 smartConnect:124] in pool
+[I 241026 09:41:05 smartConnect:124] in pool
+[W 241026 09:41:06 smartWebSocketV2:319] Attempting to resubscribe/reconnect (Attempt 1)...
+[W 241026 09:41:08 smartWebSocketV2:319] Attempting to resubscribe/reconnect (Attempt 2)...
+[W 241026 09:41:10 smartWebSocketV2:319] Attempting to resubscribe/reconnect (Attempt 2)...
+[W 241026 09:41:11 smartWebSocketV2:319] Attempting to resubscribe/reconnect (Attempt 2)...
+[W 241026 09:41:12 smartWebSocketV2:319] Attempting to resubscribe/reconnect (Attempt 2)...
+[W 241026 09:41:13 smartWebSocketV2:319] Attempting to resubscribe/reconnect (Attempt 2)...
+[W 241026 09:41:14 smartWebSocketV2:319] Attempting to resubscribe/reconnect (Attempt 2)...
+[W 241026 09:41:15 smartWebSocketV2:319] Attempting to resubscribe/reconnect (Attempt 2)...
+[I 241026 09:42:57 smartConnect:124] in pool
+[I 241026 09:42:58 smartConnect:124] in pool
+[I 241026 09:43:00 smartConnect:124] in pool
+[I 241026 09:43:01 smartConnect:124] in pool
+[I 241026 09:43:02 smartConnect:124] in pool
+[I 241026 09:43:03 smartConnect:124] in pool
+[I 241026 09:43:05 smartConnect:124] in pool
+[I 241026 09:43:06 smartConnect:124] in pool
+[I 241026 09:43:07 smartConnect:124] in pool
+[I 241026 09:43:08 smartConnect:124] in pool
