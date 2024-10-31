@@ -10,4 +10,5 @@ strategy_db=client['Strategies']
 #Defining Connections
 users = user_db['Users']
 my_strategy=strategy_db['My_Strategies']
+deployed_strategies=strategy_db['Deployed_Strategies']
 

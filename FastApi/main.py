@@ -8,9 +8,9 @@ from bson import ObjectId
 #from functions.instrument import Instrument
 import functions.config as config
 from fastapi.middleware.cors import CORSMiddleware
-from Database.mongodb import users, my_strategy
+from Database.mongodb import users, my_strategy, deployed_strategies
 from models.register_models import UserRegister, LoginUser
-from models.strategy_models import Strategy
+from models.strategy_models import Strategy, StrategyDeleteRequest
 
 app = FastAPI()
 app.add_middleware(
@@ -118,6 +118,30 @@ async def get_strategy(strategy_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching strategy: {e}")
     
+#delete strategy from my_strategies
+@app.delete("/strategy/{strategy_id}")
+async def delete_strategy(strategy_id: str):
+    # Ensure the strategy_id is a valid ObjectId
+    if not ObjectId.is_valid(strategy_id):
+        raise HTTPException(status_code=400, detail="Invalid strategy ID")
+
+    result = my_strategy.delete_one({"_id": ObjectId(strategy_id)})
+    print("deleted strategy")
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Strategy not found")
+
+    return {"message": "Strategy deleted successfully"}
+
+@app.post("/deploy_strategy")
+async def deploy_strategy(strategy: Strategy):
+    # Convert strategyId to an ObjectId if needed
+    try:
+        strategy_dict = strategy.dict(by_alias=True)
+        insert_strategy=my_strategy.insert_one(strategy_dict)
+        print('deploying strategy')
+        return {"message": "Strategy deployed successfully", "id":str(insert_strategy.inserted_id)}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Error deploying strategy") from e
 
 # Route for Market Order
 @app.post("/market_order")
