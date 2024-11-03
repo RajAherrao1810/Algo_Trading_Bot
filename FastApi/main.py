@@ -10,15 +10,15 @@ import functions.config as config
 from fastapi.middleware.cors import CORSMiddleware
 from Database.mongodb import users, my_strategy, deployed_strategies
 from models.register_models import UserRegister, LoginUser
-from models.strategy_models import Strategy, StrategyDeleteRequest
+from models.strategy_models import Strategy
 
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Allow specific origin
+    allow_origins=["http://localhost:3000"],  # Adjust as needed
     allow_credentials=True,
-    allow_methods=["*"],  # Allow all HTTP methods
-    allow_headers=["*"],  # Allow all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -98,7 +98,7 @@ async def create_strategy(strategy: Strategy):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error saving strategy: {e}")
 
-
+#route for getting strategy for making my_startegy template
 @app.get("/strategy/{strategy_id}")
 async def get_strategy(strategy_id: str):
     try:
@@ -132,16 +132,40 @@ async def delete_strategy(strategy_id: str):
 
     return {"message": "Strategy deleted successfully"}
 
-@app.post("/deploy_strategy")
+
+#route for adding strategy to deployed_strategy collection
+@app.post("/deployed_strategies")
 async def deploy_strategy(strategy: Strategy):
     # Convert strategyId to an ObjectId if needed
     try:
         strategy_dict = strategy.dict(by_alias=True)
-        insert_strategy=my_strategy.insert_one(strategy_dict)
+        insert_strategy=deployed_strategies.insert_one(strategy_dict)
         print('deploying strategy')
         return {"message": "Strategy deployed successfully", "id":str(insert_strategy.inserted_id)}
     except Exception as e:
         raise HTTPException(status_code=500, detail="Error deploying strategy") from e
+
+
+#route for getting strategy for making deployed_startegy template
+@app.get("/deployed_strategies/{strategy_id}")
+async def get_strategy(strategy_id: str):
+    try:
+        # Convert `strategy_id` from string to ObjectId
+        print(f"Received strategy_id: {strategy_id}")
+        strategy = deployed_strategies.find_one({"_id": ObjectId(strategy_id)})
+        print("found the strategy")
+        
+        if not strategy:
+            raise HTTPException(status_code=404, detail="Strategy not found")
+        
+        # Convert `_id` to string for JSON serialization
+        strategy["_id"] = str(strategy["_id"])
+        
+        print("returning strategy")
+        return {"strategy": strategy}
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error fetching strategy: {e}")
 
 # Route for Market Order
 @app.post("/market_order")
