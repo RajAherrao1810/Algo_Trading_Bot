@@ -3,7 +3,7 @@ from SmartApi.smartWebSocketV2 import SmartWebSocketV2
 import threading
 import pyotp
 import functions.config as config
-from functions.instrument import Instrument
+from FastApi.instrument import get_symbol_from_token
 from pymongo import MongoClient
 from logzero import logger
 
@@ -61,7 +61,7 @@ def on_data(wsapp, msg):
             # Insert a new document if the token is not found
             new_data = {
                 
-                "Symbol": Instrument.getSymbolFromToken(token),
+                "Symbol": get_symbol_from_token(token),
                 "token": token,
                 "LTP": ltp,
                 "Open": open_price,

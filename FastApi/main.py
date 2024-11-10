@@ -5,14 +5,16 @@ import functions.webSocket as ws
 from passlib.context import CryptContext
 import bcrypt
 from bson import ObjectId
-#from functions.instrument import Instrument
 import functions.config as config
 from fastapi.middleware.cors import CORSMiddleware
-from Database.mongodb import users, my_strategy, deployed_strategies
+from Database.mongodb import users, my_strategy, deployed_strategies, live_positions
 from models.register_models import UserRegister, LoginUser
 from models.strategy_models import Strategy
+import threading
+from strategyExecution import execute_strategy
 
 app = FastAPI()
+config.SMART_API_OBJ , config.SMART_WEB = ws.login()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],  # Adjust as needed
@@ -35,7 +37,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 @app.get("/")
 async def home():
-    """config.SMART_API_OBJ , config.SMART_WEB = ws.login()
+    """
     ws.connectFeed(config.SMART_WEB)"""
     return {"message": "Websocket connection established"}
 
@@ -138,9 +140,21 @@ async def delete_strategy(strategy_id: str):
 async def deploy_strategy(strategy: Strategy):
     # Convert strategyId to an ObjectId if needed
     try:
-        strategy_dict = strategy.dict(by_alias=True)
+        strategy_dict = strategy.model_dump(by_alias=True)
+
+        #Sorting the legs such that the buy order comes before sell order 
+        buy_legs = [leg for leg in strategy_dict['legs'] if leg['buyOrSell'] == 'Buy']
+        sell_legs = [leg for leg in strategy_dict['legs'] if leg['buyOrSell'] == 'Sell']
+        strategy_dict['legs'] = buy_legs + sell_legs
+
+        #Executing the strategy
+        position_dict={
+            'strategy_name': strategy.strategyName,
+            'Instrument': strategy.selectedInstrument,
+        }
+        live_positions.insert_one(position_dict)
+        threading.Thread(target=execute_strategy, args=(strategy_dict,), daemon=True).start()
         insert_strategy=deployed_strategies.insert_one(strategy_dict)
-        print('deploying strategy')
         return {"message": "Strategy deployed successfully", "id":str(insert_strategy.inserted_id)}
     except Exception as e:
         raise HTTPException(status_code=500, detail="Error deploying strategy") from e
