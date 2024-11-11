@@ -7,7 +7,11 @@ class RiskManagement(BaseModel):
     lossExit: Optional[str]
     exitTime: Optional[str]
     profitTrailingOption: Optional[str]
+    profitSet: Optional[str]
+    profitReach: Optional[str]
+    profitIncrease: Optional[str]
     trailIncrease: Optional[str]
+
 
 class AdvancedFeatures(BaseModel):
     cycles: Optional[str]

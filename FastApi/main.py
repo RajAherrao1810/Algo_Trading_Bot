@@ -151,6 +151,7 @@ async def deploy_strategy(strategy: Strategy):
         position_dict={
             'strategy_name': strategy.strategyName,
             'Instrument': strategy.selectedInstrument,
+            'status': 'running'
         }
         live_positions.insert_one(position_dict)
         threading.Thread(target=execute_strategy, args=(strategy_dict,), daemon=True).start()

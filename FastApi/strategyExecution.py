@@ -58,14 +58,38 @@ def execute_strategy(strategy_dict):
                 while datetime.now().time() < strategy_exit_time:
                     overall_profitorloss=get_totalProfit()
                     live_positions.update_one(
-                    {'strategy_name': strategy_name, 'Instrument': selected_instrument},  # Filter for the document to update
-                    {'$set': {'strategy_profit':overall_profitorloss}}  # Update operation
-                    )
+                        {'strategy_name': strategy_name, 'Instrument': selected_instrument},  # Filter for the document to update
+                        {'$set': {'strategy_profit':overall_profitorloss,'book_profit':0}}  # Update operation
+                        )
                     #code for handling risk management 
                     if overall_profitorloss>=profit_limit or overall_profitorloss<=loss_limit:
                         exitAllLegs(symbol_list,strategy_name,selected_instrument)
-                    elif 
-                        
+                    elif  strategy_dict['riskManagement']['profitTrailingOption']== 'Trail Profit':
+                        increase_factor=int(strategy_dict['riskManagement']['profitIncrease'])
+                        trail_factor=int(strategy_dict['riskManagement']['trailIncrease'])
+                        if live_positions.find_one({'strategy_name': strategy_name, 'Instrument': selected_instrument})['book_profit']==0:
+                            continue
+                        elif overall_profitorloss<=live_positions.find_one({'strategy_name': strategy_name, 'Instrument': selected_instrument})['book_profit']:
+                            exitAllLegs(symbol_list,strategy_name,selected_instrument)
+                        book_profit=profit_trail(overall_profitorloss,increase_factor,trail_factor)
+                        live_positions.update_one(
+                        {'strategy_name': strategy_name, 'Instrument': selected_instrument},  # Filter for the document to update
+                        {'$set': {'book_profit':book_profit}}  # Update operation
+                        )
+                    elif  strategy_dict['riskManagement']['profitTrailingOption']== 'Lock&Trail':
+                        profit_reach=int(strategy_dict['riskManagement']['profitReach'])
+                        profit_lock_amount=int(strategy_dict['riskManagement']['profitLock'])
+                        increase_factor=int(strategy_dict['riskManagement']['profitIncrease'])
+                        trail_factor=int(strategy_dict['riskManagement']['trailIncrease'])
+                        if live_positions.find_one({'strategy_name': strategy_name, 'Instrument': selected_instrument})['profit_lock']==0:
+                            continue
+                        elif overall_profitorloss<=live_positions.find_one({'strategy_name': strategy_name, 'Instrument': selected_instrument})['profit_lock']:
+                            exitAllLegs(symbol_list,strategy_name,selected_instrument)
+                        profit_lock=lock_and_trail(overall_profitorloss,profit_reach, profit_lock_amount,increase_factor, trail_factor)
+                        live_positions.update_one(
+                            {'strategy_name': strategy_name, 'Instrument': selected_instrument},  # Filter for the document to update
+                            {'$set': {'book_profit':profit_lock}}  # Update operation
+                            )       
                     time.sleep(1)
             elif strategy_dict['advancedFeature']=='waitTrade':
                 pass    
@@ -126,7 +150,7 @@ def execute_reEntry(leg:dict, Instrument:str, strategy_name:str, cycles:int, sym
         {'$set': {symbol:{"symbol":symbol,'buy_price': buy_price, 'qty':qty, 'total_profit':0}}}  # Update operation
         )
     #order execution on broker side
-    order_params = {
+    """order_params = {
             "variety": "NORMAL",
             "tradingsymbol": symbol,  # Token symbol (e.g., RELIANCE)
             "symboltoken": get_token_from_symbol(leg['Symbol']),
@@ -143,7 +167,7 @@ def execute_reEntry(leg:dict, Instrument:str, strategy_name:str, cycles:int, sym
         
         print(f"Order placed successfully. Order ID: {order_id}")
     except Exception as e:
-        print(f"Order placement failed: {str(e)}")
+        print(f"Order placement failed: {str(e)}")"""
 
     #no entry after exit time
     noEntryAfter = datetime.strptime(leg['riskManagement']['exitTime'], '%H:%M').time() 
@@ -184,6 +208,7 @@ def execute_reEntry(leg:dict, Instrument:str, strategy_name:str, cycles:int, sym
 
 
 def exitAllLegs(symbol_list:list, strategy_name:str, Instrument:str):
+    #exit all the open legs in the strategy
     for symbol in symbol_list:
         qty=live_positions[strategy_name][symbol]['qty']
         if qty==0:
@@ -209,8 +234,12 @@ def exitAllLegs(symbol_list:list, strategy_name:str, Instrument:str):
                 print(f"Order placement failed: {str(e)}")
             
             webSocket.unsubscribeSymbol([get_token_from_symbol(symbol)], ws)
-        
+       
     exit_event.set()  # Signal all threads to exit
+    live_positions.update_one(
+            {'strategy_name': strategy_name, 'Instrument': Instrument},  # Filter for the document to update
+            {'$set': {'status': 'closed'}}  # Update operation
+            )
             
     
 
@@ -243,6 +272,28 @@ def get_totalProfit(strategy_name:str,symbol_list:list):
     for symbol in symbol_list:
         total_profit+=live_positions[strategy_name][symbol]['total_profit']
     return total_profit
+
+def profit_trail(overall_profit, on_every_increase, trail_by):
+    # Calculate the number of increments
+    increments = overall_profit // on_every_increase
+    
+    # Calculate the minimum profit to be booked
+    min_profit = increments * trail_by
+    return min_profit
+
+def lock_and_trail(overall_profit, profit_reach, profit_lock, on_every_increase, trail_profit):
+    # If overall profit has not reached the initial threshold, no profit should be locked
+    if overall_profit < profit_reach:
+        return 0  # No profit locked yet
+    
+    # Calculate how many increments of on_every_increase have been reached past profit_reach
+    increments = (overall_profit - profit_reach) // on_every_increase
+    
+    # Calculate the current locked profit
+    current_locked_profit = profit_lock + (increments * trail_profit)
+    
+    return current_locked_profit
+
 
 if __name__ == "__main__":
 
