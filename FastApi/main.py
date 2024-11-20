@@ -3,18 +3,21 @@ from models.order_models import MarketOrderRequest, LimitOrderRequest, StopLossO
 from functions.orderPlacement import PlaceOrder
 import functions.webSocket as ws
 from passlib.context import CryptContext
-import bcrypt
+import bcrypt 
 from bson import ObjectId
 import functions.config as config
 from fastapi.middleware.cors import CORSMiddleware
 from Database.mongodb import users, my_strategy, deployed_strategies, live_positions
 from models.register_models import UserRegister, LoginUser
-from models.strategy_models import Strategy
+from models.strategy_models import Strategy, DeployedStrategy
 import threading
 from strategyExecution import execute_strategy
+from fastapi.responses import JSONResponse
+
 
 app = FastAPI()
-config.SMART_API_OBJ , config.SMART_WEB = ws.login()
+obj, sws=ws.login()
+ws.connectFeed(sws)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],  # Adjust as needed
@@ -34,13 +37,6 @@ def hash_password(password: str) -> str:
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)"""
-
-@app.get("/")
-async def home():
-    """
-    ws.connectFeed(config.SMART_WEB)"""
-    return {"message": "Websocket connection established"}
-
 
 @app.post("/register")
 async def register(user: UserRegister):
@@ -90,10 +86,10 @@ async def login(user: LoginUser):
 #route for creating strategy
 @app.post("/create_strategy")
 async def create_strategy(strategy: Strategy):
-    
     try:
         # Convert the strategy to a dictionary for MongoDB
-        strategy_dict = strategy.dict(by_alias=True)
+        strategy_dict = strategy.model_dump(by_alias=True)
+        print(strategy_dict)
         insert_strategy=my_strategy.insert_one(strategy_dict)
         print('creating strategy')
         return {"message": "Strategy created successfully", "id":str(insert_strategy.inserted_id)}
@@ -154,33 +150,29 @@ async def deploy_strategy(strategy: Strategy):
             'status': 'running'
         }
         live_positions.insert_one(position_dict)
-        threading.Thread(target=execute_strategy, args=(strategy_dict,), daemon=True).start()
+        threading.Thread(target=execute_strategy, args=(strategy_dict,obj,sws), daemon=True).start()
         insert_strategy=deployed_strategies.insert_one(strategy_dict)
         return {"message": "Strategy deployed successfully", "id":str(insert_strategy.inserted_id)}
     except Exception as e:
         raise HTTPException(status_code=500, detail="Error deploying strategy") from e
 
 
+def transform_strategy(strategy:dict):
+    return {
+        "strategy_name": strategy.get("strategyName", ""),
+        "selected_instrument": strategy.get("Instrument", ""),
+        "status": strategy.get("status",""),
+        "overall_profit_or_loss": strategy.get("overallProfitOrLoss", 0.0),
+    }
+
+
 #route for getting strategy for making deployed_startegy template
-@app.get("/deployed_strategies/{strategy_id}")
-async def get_strategy(strategy_id: str):
-    try:
-        # Convert `strategy_id` from string to ObjectId
-        print(f"Received strategy_id: {strategy_id}")
-        strategy = deployed_strategies.find_one({"_id": ObjectId(strategy_id)})
-        print("found the strategy")
-        
-        if not strategy:
-            raise HTTPException(status_code=404, detail="Strategy not found")
-        
-        # Convert `_id` to string for JSON serialization
-        strategy["_id"] = str(strategy["_id"])
-        
-        print("returning strategy")
-        return {"strategy": strategy}
+@app.get("/deployed_strategy", response_model=list[DeployedStrategy])
+async def get_deployed_strategies():
+    strategies = [transform_strategy(strategy) for strategy in live_positions.find()]
+    return JSONResponse(content=strategies)
     
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching strategy: {e}")
+
 
 # Route for Market Order
 @app.post("/market_order")
@@ -197,7 +189,9 @@ async def place_market_order(order: MarketOrderRequest):
         )
         return {"message": "Market order placed successfully"}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Market order failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Market order failed: {str(e)}"
+        )
+    
     
 
 # Route for Limit Order

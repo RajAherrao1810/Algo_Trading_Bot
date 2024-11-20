@@ -3,7 +3,7 @@ from SmartApi.smartWebSocketV2 import SmartWebSocketV2
 import threading
 import pyotp
 import functions.config as config
-from FastApi.instrument import get_symbol_from_token
+from .instrument import get_symbol_from_token
 from pymongo import MongoClient
 from logzero import logger
 
@@ -18,7 +18,7 @@ def login():
     res = obj.getProfile(refreshToken)
     
     sws = SmartWebSocketV2(AUTH_TOKEN, config.API_KEY, config.USERNAME, FEED_TOKEN ,max_retry_attempt=5)
-    return obj, sws
+    return obj,sws
 
 
 #------- Websocket code
@@ -108,17 +108,16 @@ def unsubscribeSymbol(token_list,sws):
     except Exception as e:
         print(f"Error in unsubscribeSymbol: {e}")
 
-def connectFeed(sws,tokeList =None):
+def connectFeed(sws):
     
     def on_open(wsapp):
         logger.info("on open")
         token_list = [
             {
                 "exchangeType": 1,
-                'tokens': ["26000", "26009", "26074"]
+                'tokens': ["26000", "26009", "26074", "500209", "500253"]
             }
         ]
-        if tokeList  : token_list.append(tokeList)
         sws.subscribe(config.CORRELATION_ID, config.FEED_MODE, token_list)
 
     sws.on_open = on_open

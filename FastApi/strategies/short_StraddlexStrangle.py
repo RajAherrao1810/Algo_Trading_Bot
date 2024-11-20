@@ -1,4 +1,4 @@
-from FastApi.instrument import Instrument
+from FastApi.functions.instrument import Instrument
 from FastApi.functions.orderPlacement import PlaceOrder
 import math
 

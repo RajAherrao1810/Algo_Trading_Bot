@@ -1,0 +1,59 @@
+[I 241118 10:58:42 webSocket:114] on open
+[W 241118 11:43:33 smartWebSocketV2:319] Attempting to resubscribe/reconnect (Attempt 1)...
+[W 241118 11:43:43 smartWebSocketV2:319] Attempting to resubscribe/reconnect (Attempt 2)...
+[W 241118 11:43:53 smartWebSocketV2:319] Attempting to resubscribe/reconnect (Attempt 3)...
+[W 241118 11:44:03 smartWebSocketV2:319] Attempting to resubscribe/reconnect (Attempt 4)...
+[W 241118 11:44:13 smartWebSocketV2:319] Attempting to resubscribe/reconnect (Attempt 5)...
+[E 241118 11:44:23 webSocket:79] ---------Connection Error Connection closed-----------
+[W 241118 11:44:23 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[E 241118 11:44:23 webSocket:79] ---------Connection Error Connection closed-----------
+[W 241118 11:44:23 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[E 241118 11:44:23 webSocket:79] ---------Connection Error Connection closed-----------
+[W 241118 11:44:23 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[E 241118 11:44:23 webSocket:79] ---------Connection Error Connection closed-----------
+[W 241118 11:44:23 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[E 241118 11:44:23 webSocket:79] ---------Connection Error Connection closed-----------
+[W 241118 11:44:23 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[E 241118 11:44:23 webSocket:79] ---------Connection Error Connection closed-----------
+[W 241118 11:44:23 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[E 241118 11:44:23 webSocket:79] ---------Connection Error Connection closed-----------
+[W 241118 11:44:23 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[I 241118 12:46:53 webSocket:114] on open
+[I 241118 13:41:49 webSocket:114] on open
+[I 241118 13:43:59 webSocket:114] on open
+[I 241118 13:46:25 webSocket:114] on open
+[I 241118 13:47:23 webSocket:114] on open
+[I 241118 16:33:42 webSocket:114] on open
+[I 241118 16:39:31 webSocket:114] on open
+[I 241118 16:48:15 webSocket:114] on open
+[I 241118 16:48:49 webSocket:114] on open
+[I 241118 16:49:35 webSocket:114] on open
+[I 241118 16:51:56 webSocket:114] on open
+[I 241118 16:55:52 webSocket:114] on open
+[I 241118 16:56:28 webSocket:114] on open
+[I 241118 16:56:40 webSocket:114] on open
+[I 241118 16:57:09 webSocket:114] on open
+[I 241118 18:37:38 webSocket:114] on open
+[I 241118 18:39:04 webSocket:114] on open
+[I 241118 18:40:53 webSocket:114] on open
+[I 241118 18:50:01 webSocket:114] on open
+[I 241118 19:03:47 webSocket:114] on open
+[W 241118 19:10:16 smartWebSocketV2:319] Attempting to resubscribe/reconnect (Attempt 1)...
+[W 241118 19:10:26 smartWebSocketV2:319] Attempting to resubscribe/reconnect (Attempt 2)...
+[W 241118 19:10:36 smartWebSocketV2:319] Attempting to resubscribe/reconnect (Attempt 3)...
+[W 241118 19:10:46 smartWebSocketV2:319] Attempting to resubscribe/reconnect (Attempt 4)...
+[W 241118 19:10:56 smartWebSocketV2:319] Attempting to resubscribe/reconnect (Attempt 5)...
+[E 241118 19:11:06 webSocket:79] ---------Connection Error Connection closed-----------
+[W 241118 19:11:06 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[E 241118 19:11:06 webSocket:79] ---------Connection Error Connection closed-----------
+[W 241118 19:11:06 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[E 241118 19:11:06 webSocket:79] ---------Connection Error Connection closed-----------
+[W 241118 19:11:06 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[E 241118 19:11:06 webSocket:79] ---------Connection Error Connection closed-----------
+[W 241118 19:11:06 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[E 241118 19:11:06 webSocket:79] ---------Connection Error Connection closed-----------
+[W 241118 19:11:06 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[E 241118 19:11:06 webSocket:79] ---------Connection Error Connection closed-----------
+[W 241118 19:11:06 smartWebSocketV2:343] Connection closed due to max retry attempts reached.
+[E 241118 19:11:06 webSocket:79] ---------Connection Error Connection closed-----------
+[W 241118 19:11:06 smartWebSocketV2:343] Connection closed due to max retry attempts reached.

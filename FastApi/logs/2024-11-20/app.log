@@ -1,0 +1,12 @@
+[I 241120 11:34:29 webSocket:114] on open
+[W 241120 11:39:09 smartWebSocketV2:319] Attempting to resubscribe/reconnect (Attempt 1)...
+[W 241120 11:39:19 smartWebSocketV2:319] Attempting to resubscribe/reconnect (Attempt 2)...
+[I 241120 11:39:29 webSocket:114] on open
+[I 241120 11:58:34 webSocket:114] on open
+[I 241120 12:00:58 webSocket:114] on open
+[I 241120 12:08:19 webSocket:114] on open
+[I 241120 12:17:13 webSocket:114] on open
+[I 241120 12:19:38 webSocket:114] on open
+[I 241120 12:20:44 webSocket:114] on open
+[I 241120 12:22:25 webSocket:114] on open
+[I 241120 12:28:09 webSocket:114] on open

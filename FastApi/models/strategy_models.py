@@ -3,15 +3,16 @@ from typing import List, Optional, Any, Dict
 
 
 class RiskManagement(BaseModel):
-    profitExit: Optional[str]
-    lossExit: Optional[str]
     exitTime: Optional[str]
+    lockProfitAt: Optional[str]=None
+    lockProfitThreshold: Optional[str]=None
+    lockTrailIncrease: Optional[str]=None
+    lockTrailProfitBy: Optional[str]=None
+    lossExit: Optional[str]
+    profitExit: Optional[str]
     profitTrailingOption: Optional[str]
-    profitSet: Optional[str]
-    profitReach: Optional[str]
-    profitIncrease: Optional[str]
-    trailIncrease: Optional[str]
-
+    trailIncrease: Optional[str]=None
+    trailProfitBy: Optional[str]=None
 
 class AdvancedFeatures(BaseModel):
     cycles: Optional[str]
@@ -30,4 +31,11 @@ class Strategy(BaseModel):
     selectedInstrument: str
     strategyName: str
     strategyType: str
+
+
+class DeployedStrategy(BaseModel):
+    strategyName: str
+    selectedInstrument: str
+    status: str = "Running"
+    overall_profit_or_loss: float = 0.0
 
