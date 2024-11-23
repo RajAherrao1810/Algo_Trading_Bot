@@ -16,4 +16,5 @@ my_strategy=strategy_db['My_Strategies']
 deployed_strategies=strategy_db['Deployed_Strategies']
 live_feed=feed_db['Live_feed']
 live_positions=feed_db['Live_Positions']
-
+order_book=feed_db['Order_book']
+strategy_templates=strategy_db['Strategy_Templates']

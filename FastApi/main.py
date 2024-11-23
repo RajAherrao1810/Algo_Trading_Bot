@@ -1,23 +1,24 @@
 from fastapi import FastAPI, HTTPException
-from models.order_models import MarketOrderRequest, LimitOrderRequest, StopLossOrderRequest
-from functions.orderPlacement import PlaceOrder
 import functions.webSocket as ws
 from passlib.context import CryptContext
 import bcrypt 
 from bson import ObjectId
 import functions.config as config
 from fastapi.middleware.cors import CORSMiddleware
-from Database.mongodb import users, my_strategy, deployed_strategies, live_positions
+from functions.mongodb import users, my_strategy, deployed_strategies, live_positions, order_book, strategy_templates
 from models.register_models import UserRegister, LoginUser
-from models.strategy_models import Strategy, DeployedStrategy
+from models.strategy_models import Strategy, DeployedStrategy, Order, FindStrategyRequest
+from functions.instrument import get_master_list
 import threading
 from strategyExecution import execute_strategy
 from fastapi.responses import JSONResponse
+from typing import List
 
 
 app = FastAPI()
 obj, sws=ws.login()
 ws.connectFeed(sws)
+threading.Thread(target=get_master_list, args=(), daemon=True).start()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],  # Adjust as needed
@@ -95,40 +96,55 @@ async def create_strategy(strategy: Strategy):
         return {"message": "Strategy created successfully", "id":str(insert_strategy.inserted_id)}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error saving strategy: {e}")
-
-#route for getting strategy for making my_startegy template
-@app.get("/strategy/{strategy_id}")
-async def get_strategy(strategy_id: str):
-    try:
-        # Convert `strategy_id` from string to ObjectId
-        strategy = my_strategy.find_one({"_id": ObjectId(strategy_id)})
-        print("found the strategy")
-        
-        if not strategy:
-            raise HTTPException(status_code=404, detail="Strategy not found")
-        
-        # Convert `_id` to string for JSON serialization
-        strategy["_id"] = str(strategy["_id"])
-        
-        print("returning strategy")
-        return {"strategy": strategy}
     
+
+#route for adding strategy to my startegy page 
+@app.post("/add_strategy")
+async def add_strategy(strategy:FindStrategyRequest):
+    # Fetch strategy details from the strategy_templates collection based on name
+    strategy_details = strategy_templates.find_one({"strategyName": strategy.strategyName, "selectedInstrument":strategy.instrument})
+
+    if not strategy_details:
+        raise HTTPException(status_code=404, detail="Strategy template not found")
+
+    # Insert the strategy into my_strategies collection
+    result = my_strategy.insert_one(strategy_details)
+
+    if result.inserted_id:
+        return {"message": "Strategy added successfully to My Strategies"}
+    else:
+        raise HTTPException(status_code=500, detail="Error adding strategy to the database")
+
+#route for getting strategy for making my_startegy template    
+@app.get("/my_strategies")
+async def get_my_strategies():
+    try:
+        strategies = list(my_strategy.find())
+        for strategy in strategies:
+            # Convert _id to string for JSON serialization
+            strategy["_id"] = str(strategy["_id"])
+        return {"strategies": strategies}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching strategy: {e}")
+        raise HTTPException(status_code=500, detail=f"Error fetching strategies: {e}")
+ 
     
 #delete strategy from my_strategies
-@app.delete("/strategy/{strategy_id}")
-async def delete_strategy(strategy_id: str):
-    # Ensure the strategy_id is a valid ObjectId
-    if not ObjectId.is_valid(strategy_id):
-        raise HTTPException(status_code=400, detail="Invalid strategy ID")
+@app.delete("/delete_strategy")
+async def delete_strategy(request: FindStrategyRequest):
+    try:
+        # Use strategyName and instrument to identify the strategy to delete
+        result = my_strategy.delete_one({
+            "strategyName": request.strategyName,
+            "instrument": request.instrument
+        })
 
-    result = my_strategy.delete_one({"_id": ObjectId(strategy_id)})
-    print("deleted strategy")
-    if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="Strategy not found")
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Strategy not found")
 
-    return {"message": "Strategy deleted successfully"}
+        return {"message": "Strategy deleted successfully"}
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error deleting strategy: {e}")
 
 
 #route for adding strategy to deployed_strategy collection
@@ -171,63 +187,39 @@ def transform_strategy(strategy:dict):
 async def get_deployed_strategies():
     strategies = [transform_strategy(strategy) for strategy in live_positions.find()]
     return JSONResponse(content=strategies)
+
+
+@app.get("/order_book", response_model=List[Order])
+def get_orders():
+    orders=obj.holding()
+    transformed_orders = []
+    for order in orders["data"]:
+        symbol = order["tradingsymbol"]
+        quantity = int(order["quantity"])
+        avg_price = float(order["fillprice"])
+        current_price = float(order["fillprice"])
+        pl = (current_price - avg_price) * quantity  # Calculating P/L
+        
+        transformed_orders.append(
+            {
+                "symbol": symbol,
+                "quantity": quantity,
+                "avgPrice": avg_price,
+                "currentPrice": current_price,
+                "pl": pl,
+            }
+        )
+
+    order_book.insert_many(transformed_orders)
+    orders = list(order_book.find({}, {"_id": 0})) 
+    return orders
+
+
+@app.get("/strategy_templates")
+async def get_strategy_templates():
+    templates = strategy_templates.find()
+    return [
+        {"name": template["strategyName"], "Instrument":template["selectedInstrument"],"strategyType":template["strategyType"],"successRate": template["successRate"]}
+        for template in templates
+    ]
     
-
-
-# Route for Market Order
-@app.post("/market_order")
-async def place_market_order(order: MarketOrderRequest):
-    try:
-        PlaceOrder.normalMarketOrder(
-            symbol=order.symbol,
-            token=order.token,
-            transaction_type=order.transaction_type,
-            exchange=order.exchange,
-            product_type=order.product_type,
-            quantity=order.quantity,
-            obj=config.SMART_API_OBJ
-        )
-        return {"message": "Market order placed successfully"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Market order failed: {str(e)}"
-        )
-    
-    
-
-# Route for Limit Order
-@app.post("/limit_order")
-async def place_limit_order(order: LimitOrderRequest):
-    try:
-        PlaceOrder.normalLimitOrder(
-            symbol=order.symbol,
-            token=order.token,
-            transaction_type=order.transaction_type,
-            exchange=order.exchange,
-            product_type=order.product_type,
-            limit_price=order.limit_price,
-            quantity=order.quantity,
-            obj=config.SMART_API_OBJ
-        )
-        return {"message": "Limit order placed successfully"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Limit order failed: {str(e)}")
-
-
-# Route for Stop Loss Limit Order
-@app.post("/stop_loss_order")
-async def place_stop_loss_order(order: StopLossOrderRequest):
-    try:
-        PlaceOrder.stopLossLimitOrder(
-            symbol=order.symbol,
-            token=order.token,
-            transaction_type=order.transaction_type,
-            exchange=order.exchange,
-            product_type=order.product_type,
-            limit_price=order.limit_price,
-            trigger_price=order.trigger_price,
-            quantity=order.quantity,
-            obj=config.SMART_API_OBJ
-        )
-        return {"message": "Stop Loss order placed successfully"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Stop Loss order failed: {str(e)}")

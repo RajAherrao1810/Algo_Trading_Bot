@@ -1,6 +1,6 @@
 import requests
 import pandas as pd
-from Database.mongodb import masterList, live_feed
+from functions.mongodb import masterList, live_feed
 
 def get_master_list():
     # Fetch the JSON data
@@ -68,6 +68,6 @@ if __name__ == "__main__":
     # print(token)
     # print(get_token_symbol('BANKNIFTY', '25SEP24', '54000', 'CE'))
     # print(get_indice_ltp('BANKNIFTY'))
-    #get_master_list()
+    get_master_list()
     #get_token_symbol("Nifty", '21NOV2024', '24400', 'CE')
-    get_indice_ltp('Nifty')
+    #get_indice_ltp('Nifty')

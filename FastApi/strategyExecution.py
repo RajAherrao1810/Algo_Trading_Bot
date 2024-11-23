@@ -7,7 +7,7 @@ from functions.webSocket import subscribeSymbol, unsubscribeSymbol
 from functions.instrument import indice_info, get_indice_ltp, get_token_symbol,get_token_from_symbol
 import math
 from functions import config
-from Database.mongodb import live_feed, live_positions
+from functions.mongodb import live_feed, live_positions
 from typing import Optional
 from threading import Event, Thread
 
@@ -26,27 +26,39 @@ session = client.generateSession(client_id, password)"""
 exit_event = Event()
 
 def execute_strategy(strategy_dict,obj,sws):
-    if(strategy_dict['strategyType']=='Time Based'):
+    selected_instrument = strategy_dict["selectedInstrument"].upper()
+    strategy_name=strategy_dict['strategyName']
+    target_time = strategy_dict['entryTime']
+    target_hour, target_minute = map(int, target_time.split(":"))
+    now = datetime.now()
+
+    # Calculate the target datetime for today at the specified time
+    target_datetime = now.replace(hour=target_hour, minute=target_minute, second=0, microsecond=0)
+
+    # If the target time has already passed today, it would be set for tomorrow
+    if target_datetime < now:
+        target_datetime += timedelta(days=1)
+
+        # time to wait until the target time
+        time_to_wait = (target_datetime - now).total_seconds()
+        # Wait until the target time
+        time.sleep(time_to_wait)
+
+    if(strategy_dict['orderType']=='Intraday'):
+        strategy_exit_time=datetime.strptime(leg['exitTime'], '%H:%M').time()
+        while datetime.now() < strategy_exit_time and not exit_event.is_set():
+            try:
+                if strategy_dict['advancedFeature']=='':
+                    pass
+                elif strategy_dict['advancedFeature']=='reEntry':
+                    pass
+            except Exception as e:
+                raise HTTPException(status_code=500, detail=f"Error placing order: {str(e)}")
+
         try:
-            target_time = strategy_dict['entryTime']
-            target_hour, target_minute = map(int, target_time.split(":"))
-            now = datetime.now()
-
-            # Calculate the target datetime for today at the specified time
-            target_datetime = now.replace(hour=target_hour, minute=target_minute, second=0, microsecond=0)
-
-            # If the target time has already passed today, it would be set for tomorrow
-            if target_datetime < now:
-                target_datetime += timedelta(days=1)
-
-            # time to wait until the target time
-            time_to_wait = (target_datetime - now).total_seconds()
-            # Wait until the target time
-            time.sleep(time_to_wait)
-
-            selected_instrument = strategy_dict["selectedInstrument"].upper()
-            strategy_name=strategy_dict['strategyName']
-            if strategy_dict['advancedFeature']=='reEntry':
+            if strategy_dict['advancedFeature']=='':
+                pass
+            elif strategy_dict['advancedFeature']=='reEntry':
                 cycles=strategy_dict['advancedFeatures']['cycles']
                 symbol_list=[]
                 profit_limit=strategy_dict['profitExit']

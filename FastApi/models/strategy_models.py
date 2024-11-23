@@ -39,3 +39,17 @@ class DeployedStrategy(BaseModel):
     status: str = "Running"
     overall_profit_or_loss: float = 0.0
 
+
+class Order(BaseModel):
+    symbol: str
+    quantity: int
+    avgPrice: float
+    currentPrice: float
+    pl: float
+
+
+
+class FindStrategyRequest(BaseModel):
+    strategyName: str
+    instrument: str
+
